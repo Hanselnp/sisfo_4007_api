@@ -5,66 +5,141 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Dashboard extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    function getSdm() {
+      $id_sdm = $this->get('id_sdm');
+      if ($id_sdm == '') {
+        return $this->response($this->db->get('sdm')->result(), 200);
+      } else {
+        $this->db->where('id_sdm', $id_sdm);
+        return $this->response($this->db->get('sdm')->result(), 200);
+      }
+    }
+
+    function getPemesanan($id_pemesanan = '', $limit = '') {
+      if ($id_pemesanan == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_pemesanan', 'DESC');
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        } else {
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        }
+      } else if ($id_pemesanan != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_pemesanan', $id_pemesanan);
+          $this->db->order_by('id_pemesanan', 'DESC');
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        } else {
+          $this->db->where('id_pemesanan', $id_pemesanan);
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        }
+      }
+    }
+
+    function getTagihan($id_tagihan = '', $limit = '') {
+      if ($id_tagihan == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('idTagihan', 'DESC');
+          return $this->response($this->db->get('tagihan')->result(), 200);
+        } else {
+          return $this->response($this->db->get('tagihan')->result(), 200);
+        }
+      } else if ($id_tagihan != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('idTagihan', $id_tagihan);
+          $this->db->order_by('idTagihan', 'DESC');
+          return $this->response($this->db->get('tagihan')->result(), 200);
+        } else {
+          $this->db->where('idTagihan', $id_tagihan);
+          return $this->response($this->db->get('tagihan')->result(), 200);
+        }
+      }
+    }
+
+    function getInventory($id_barang = '', $limit = '') {
+      if ($id_barang == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('idBarang', 'DESC');
+          return $this->response($this->db->get('inventory')->result(), 200);
+        } else {
+          return $this->response($this->db->get('inventory')->result(), 200);
+        }
+      } else if ($id_barang != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('idBarang', $id_barang);
+          $this->db->order_by('idBarang', 'DESC');
+          return $this->response($this->db->get('inventory')->result(), 200);
+        } else {
+          $this->db->where('idBarang', $id_barang);
+          return $this->response($this->db->get('inventory')->result(), 200);
+        }
+      }
+    }
+
+    function getStatusPemasanganSedangDiproses($id_sp = '', $limit = '') {
+      if ($id_sp == '') {
+        if ($limit != '') {
+          $this->db->where('status_pemasangan', "Sedang Dalam Proses Pemasangan");
+          $this->db->limit($limit);
+          $this->db->order_by('id_sp', 'DESC');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        } else {
+          $this->db->where('status_pemasangan', "Sedang Dalam Proses Pemasangan");
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        }
+      } else if ($id_sp != '') {
+        if ($limit != '') {
+          $this->db->where('status_pemasangan', "Sedang Dalam Proses Pemasangan");
+          $this->db->limit($limit);
+          $this->db->where('id_sp', $id_barang);
+          $this->db->order_by('id_sp', 'DESC');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        } else {
+          $this->db->where('status_pemasangan', "Sedang Dalam Proses Pemasangan");
+          $this->db->where('id_sp', $id_barang);
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        }
+      }
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
-        $id_sdm = $this->get('id_sdm');
+      $param = $this->get('param');
+      if ($param == 'get_sdm') {
+        return $this->getSdm();
+      } else if ($param == 'get_pemesanan') {
         $id_pemesanan = $this->get('id_pemesanan');
-        $idTagihan = $this->get('idTagihan');
-        $idBarang = $this->get('idBarang');
+        $limit = $this->get('limit');
+        return $this->getPemesanan($id_pemesanan, $limit);
+      } else if ($param == 'get_tagihan') {
+        $id_tagihan = $this->get('id_tagihan');
+        $limit = $this->get('limit');
+        return $this->getTagihan($id_tagihan, $limit);
+      } else if ($param == 'get_inventory') {
+        $id_barang = $this->get('id_inventory');
+        $limit = $this->get('limit');
+        return $this->getInventory($id_barang, $limit);
+      } else if ($param == 'get_status_pemasangan') {
         $id_sp = $this->get('id_sp');
-
-
-
-        //add all function
-        if ($id_pemesanan != '') {
-            if ($id_pemesanan = 'all') {
-              $telkomdb = $this->db->get('pemesanan')->result();
-            } else {
-              $this->db->where('id_pemesanan', $id_pemesanan);
-              $telkomdb = $this->db->get('pemesanan')->result();
-            }
-        } elseif ($id_sp != '') {
-            if ($id_sp == 'all') {
-              $telkomdb = $this->db->get('status_pemasangan')->result();
-            } else {
-              $this->db->where('id_sp', $id_sp);
-              $telkomdb = $this->db->get('status_pemasangan')->result();
-            }
-        } elseif ($idTagihan != '') {
-            if ($idTagihan == 'all') {
-              $telkomdb = $this->db->get('tagihan')->result();
-            } else {
-              $this->db->where('idTagihan', $idTagihan);
-              $telkomdb = $this->db->get('tagihan')->result();
-            }
-        } elseif ($idBarang != '') {
-            if ($idBarang == 'all') {
-              $telkomdb = $this->db->get('inventory')->result();
-            } else {
-              $this->db->where('idBarang', $idBarang);
-              $telkomdb = $this->db->get('inventory')->result();
-            }
-        } elseif ($id_sdm != '') {
-            if ($id_sdm == 'all') {
-              $telkomdb = $this->db->get('sdm')->result();
-            } else {
-              $this->db->where('id_sdm', $id_sdm);
-              $telkomdb = $this->db->get('sdm')->result();
-            }
-        }
-        $this->response($telkomdb, 200);
+        $limit = $this->get('limit');
+        return $this->getStatusPemasanganSedangDiproses($id_sp, $limit);
+      }
     }
 
     //Mengirim atau menambah data telkomdb baru
     function index_post() {
-
       $dataPemesanan = array(
                   'id_pemesanan'           => $this->put('id'),
                   'nama'   => $this->put('nama'),

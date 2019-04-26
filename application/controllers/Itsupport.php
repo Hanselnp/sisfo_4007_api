@@ -5,16 +5,99 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Itsupport extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    function getPelanggan($id_pelanggan = '', $limit = '') {
+      if ($id_pelanggan == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_pelanggan', 'DESC');
+          return $this->response($this->db->get('pelanggan')->result(), 200);
+        } else {
+          return $this->response($this->db->get('pelanggan')->result(), 200);
+        }
+      } else if ($id_pelanggan != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_pelanggan', $id_pelanggan);
+          $this->db->order_by('nama', 'ASC');
+          return $this->response($this->db->get('pelanggan')->result(), 200);
+        } else {
+          $this->db->where('id_pelanggan', $id_pelanggan);
+          return $this->response($this->db->get('pelanggan')->result(), 200);
+        }
+      }
+    }
+
+    function getKomplain($id_komplain = '', $limit = '') {
+      if ($id_komplain == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_komplain', 'DESC');
+          return $this->response($this->db->get('komplain')->result(), 200);
+        } else {
+          return $this->response($this->db->get('komplain')->result(), 200);
+        }
+      } else if ($id_komplain != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_komplain', $id_komplain);
+          $this->db->order_by('nama', 'ASC');
+          return $this->response($this->db->get('komplain')->result(), 200);
+        } else {
+          $this->db->where('id_komplain', $id_komplain);
+          return $this->response($this->db->get('komplain')->result(), 200);
+        }
+      }
+    }
+
+    function getStatusPemasangan($id_sp = '', $limit = '') {
+      if ($id_sp == '') {
+        if ($limit != '') {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          $this->db->limit($limit);
+          $this->db->order_by('id_sp', 'DESC');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        } else {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        }
+      } else if ($id_sp != '') {
+        if ($limit != '') {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          $this->db->limit($limit);
+          $this->db->where('id_sp', $id_barang);
+          $this->db->order_by('id_sp', 'DESC');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        } else {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          $this->db->where('id_sp', $id_barang);
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        }
+      }
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
-
+      $param = $this->get('param');
+      if ($param == 'get_pelanggan') {
+        $id_pelanggan = $this->get('id_pelanggan');
+        $limit = $this->get('limit');
+        return $this->getPelanggan($id_pelanggan, $limit);
+      } else if ($param == 'get_komplain') {
+        $id_komplain = $this->get('id_komplain');
+        $limit = $this->get('limit');
+        return $this->getKomplain($id_komplain, $limit);
+      } else if ($param == 'get_status') {
+        $id_sp = $this->get('id_sp');
+        $limit = $this->get('limit');
+        return $this->getStatusPemasangan($id_sp, $limit);
+      }
         $id_komplain = $this->get('id_komplain');
         $id_sp = $this->get('id_sp');
         $id_pelanggan = $this->get('id_pelanggan');
@@ -108,16 +191,16 @@ class Telkomdb extends REST_Controller {
                     'status'    => $this->put('status')
         );
 
-                  } elseif ($dataKomplain != '') {
-                      $this->db->where('id_komplain', $id_komplain);
-                      $update = $this->db->update('komplain', $dataKomplain);
-                  } elseif ($dataSp != '') {
-                      $this->db->where('id_sp', $id_sp);
-                      $update = $this->db->update('status_pemasangan', $dataSp);
-                  } elseif ($dataPelanggan != '') {
-                      $this->db->where('id_pelanggan', $id_pelanggan);
-                      $update = $this->db->update('pelanggan', $dataPelanggan);
-                  }
+                  // } elseif ($dataKomplain != '') {
+                  //     $this->db->where('id_komplain', $id_komplain);
+                  //     $update = $this->db->update('komplain', $dataKomplain);
+                  // } elseif ($dataSp != '') {
+                  //     $this->db->where('id_sp', $id_sp);
+                  //     $update = $this->db->update('status_pemasangan', $dataSp);
+                  // } elseif ($dataPelanggan != '') {
+                  //     $this->db->where('id_pelanggan', $id_pelanggan);
+                  //     $update = $this->db->update('pelanggan', $dataPelanggan);
+                  // }
 
         if ($update) {
             $this->response($data, 200);
@@ -142,7 +225,7 @@ class Telkomdb extends REST_Controller {
         } elseif ($id_pelanggan != '') {
             $this->db->where('id_pelanggan', $id_pelanggan);
             $delete = $this->db->delete('pelanggan');
-        } 
+        }
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {
