@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Nonmarketing extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
@@ -120,7 +120,7 @@ class Telkomdb extends REST_Controller {
         } elseif ($id_komplain_nonmarket != '') {
             $this->db->where('id_komplain_nonmarket', $id_komplain_nonmarket);
             $delete = $this->db->delete('komplain_nonmarket');
-        } 
+        }
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

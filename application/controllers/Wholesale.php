@@ -14,7 +14,7 @@ class Telkomdb extends REST_Controller {
 
     //Menampilkan data telkomdb
     function index_get() {
-;
+
         $idKategori = $this->get('idKategori');
         $idSupplier = $this->get('idSupplier');
         $idBarang = $this->get('idBarang');
@@ -147,7 +147,7 @@ class Telkomdb extends REST_Controller {
         } elseif ($idBarang != '') {
             $this->db->where('idBarang', $idBarang);
             $delete = $this->db->delete('inventory');
-        } 
+        }
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

@@ -5,15 +5,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Csmarketing extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    public function getBanner() {
+      return $this->response($this->db->get('banner')->result(), 200);
+    }
+
+    public function getAbout()
+    {
+      return $this->response($this->db->get('about')->result(), 200);
+    }
+
+    public function getArticle()
+    {
+      return $this->response($this->db->get('article')->result(), 200);
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
+      $param = $this->get('param');
+      if ($param == "get_banner") {
+        return $this->getBanner();
+      } else if ($param == 'get_article') {
+        return $this->getArticle();
+      } else if ($param == 'get_about') {
+        return $this->getAbout();
+      }
         $id_about = $this->get('id_about');
         $id_article = $this->get('id_article');
         $id_banner = $this->get('id_banner');
