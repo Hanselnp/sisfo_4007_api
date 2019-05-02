@@ -58,11 +58,13 @@ class Home extends REST_Controller {
                   'isi'    => $this->put('isi')
       );
 
-      if ($dataAbout != '') {
+      $param = $this->get('param');
+
+      if ($param == 'post_about') {
           $insert = $this->db->insert('about', $dataAbout);
-      } elseif ($dataArticle != '') {
+      } elseif ($param == 'post_article') {
           $insert = $this->db->insert('article', $dataArticle);
-      } elseif ($dataBanner != '') {
+      } elseif ($param == 'post_banner') {
           $insert = $this->db->insert('banner', $dataBanner);
       }
 

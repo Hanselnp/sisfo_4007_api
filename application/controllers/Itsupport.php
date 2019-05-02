@@ -149,11 +149,14 @@ class Itsupport extends REST_Controller {
                   'alamat'    => $this->put('alamat'),
                   'status'    => $this->put('status')
       );
-      if ($dataKomplain != '') {
+
+      $param = $this->get('param');
+
+      if ($param == 'post_komplain') {
           $insert = $this->db->insert('komplain', $dataKomplain);
-      } elseif ($dataSp != '') {
+      } elseif ($param == 'post_status_pemasangan') {
           $insert = $this->db->insert('status_pemasangan', $dataSp);
-      } elseif ($dataPelanggan != '') {
+      } elseif ($param == 'post_pelanggan') {
           $insert = $this->db->insert('pelanggan', $dataPelanggan);
       }
 

@@ -186,15 +186,17 @@ class Hr extends REST_Controller {
                   'lainnya'    => $this->put('lainnya')
       );
 
-      if ($dataPegawai != '') {
+      $param = $this->get('param');
+
+      if ($param == 'post_pegawai') {
           $insert = $this->db->insert('pegawai', $dataPegawai);
-      } elseif ($dataAbsen != '') {
+      } elseif ($param == 'post_absen') {
           $insert = $this->db->insert('absensi', $dataAbsen);
-      } elseif ($dataStatus != '') {
+      } elseif ($param == 'post_status_pemasangan') {
           $insert = $this->db->insert('status_karyawan', $dataStatus);
-      } elseif ($dataKaryawan != '') {
+      } elseif ($param == 'post_karyawan') {
           $insert = $this->db->insert('karyawan', $dataKaryawan);
-      } elseif ($dataSdm != '') {
+      } elseif ($param == 'post_sdm') {
           $insert = $this->db->insert('sdm', $dataSdm);
       }
 

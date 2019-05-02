@@ -91,10 +91,11 @@ class Finance extends REST_Controller {
                   'gajipegawai'    => $this->put('gajipegawai')
       );
 
+      $param = $this->get('param');
 
-      if ($dataFinance != '') {
+      if ($param == 'post_finance') {
           $insert = $this->db->insert('finance', $dataFinance);
-      } elseif ($dataPegawai != '') {
+      } elseif ($param == 'post_pegawai') {
           $insert = $this->db->insert('pegawai', $dataPegawai);
       }
         if ($insert) {

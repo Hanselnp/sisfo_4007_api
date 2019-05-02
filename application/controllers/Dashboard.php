@@ -178,16 +178,17 @@ class Dashboard extends REST_Controller {
                   'Performansi'    => $this->put('Performansi'),
                   'lainnya'    => $this->put('lainnya')
       );
+      $param = $this->get('param');
 
-      if ($dataPemesanan != ''){
+      if ($param == 'post_pemesanan'){
           $insert = $this->db->insert('pemesanan', $dataPemesanan);
-      } elseif ($dataSp != '') {
+      } elseif ($param == 'post_status_pemasangan') {
           $insert = $this->db->insert('status_pemasangan', $dataSp);
-      } elseif ($dataTagihan != '') {
+      } elseif ($param == 'post_tagihan') {
           $insert = $this->db->insert('tagihan', $dataTagihan);
-      } elseif ($dataBarang != '') {
+      } elseif ($param == 'post_inventory') {
           $insert = $this->db->insert('inventory', $dataBarang);
-      } elseif ($dataSdm != '') {
+      } elseif ($param == 'post_sdm') {
           $insert = $this->db->insert('sdm', $dataSdm);
       }
 

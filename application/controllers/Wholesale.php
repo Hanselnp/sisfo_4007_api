@@ -108,12 +108,13 @@ class Wholesale extends REST_Controller {
                   'komplain'    => $this->put('komplain')
       );
 
+      $param = $this->get('param');
 
-      if ($dataKategori != '') {
-          $insert = $this->db->insert('kategori', $dataKategori);
-      } elseif ($dataSupplier != '') {
+      if ($param == 'post_kategori') {
+        $insert = $this->db->insert('kategori', $dataKategori);
+      } elseif ($param == 'post_supplier') {
           $insert = $this->db->insert('supplier', $dataSupplier);
-      } elseif ($dataBarang != '') {
+      } elseif ($param == 'post_inventoriy') {
           $insert = $this->db->insert('inventory', $dataBarang);
       }
 

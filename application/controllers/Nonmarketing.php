@@ -91,9 +91,11 @@ class Nonmarketing extends REST_Controller {
                   'komplain'    => $this->put('komplain')
       );
 
-      if ($dataPemesanan != '') {
+      $param = $this->get('param');
+
+      if ($param == 'post_pemesanan') {
           $insert = $this->db->insert('pemesanan', $dataPemesanan);
-      } elseif ($dataNonKomplain != '') {
+      } elseif ($param == 'post_komplain_nonmarket') {
           $insert = $this->db->insert('komplain_nonmarket', $dataNonKomplain);
       }
         if ($insert) {
