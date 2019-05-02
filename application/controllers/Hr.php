@@ -279,28 +279,26 @@ class Hr extends REST_Controller {
     //Menghapus salah satu data telkomdb
     function index_delete() {
 
-        $id_pegawai = $this->delete('idpegawai');
-        $id_absen = $this->delete('id_absen');
-        $id_status = $this->delete('id_status');
-        $id_karyawan = $this->delete('id_karyawan');
-        $id_sdm = $this->delete('id_sdm');
 
-        if ($id_pegawai != '') {
-            $this->db->where('idpegawai', $id_pegawai);
-            $delete = $this->db->delete('pegawai');
-        } elseif ($id_absen != '') {
-            $this->db->where('id_absen', $id_absen);
-            $delete = $this->db->delete('absensi');
-        } elseif ($id_status != '') {
-            $this->db->where('id_status', $id_status);
-            $delete = $this->db->delete('status_karyawan');
-        } elseif ($id_karyawan != '') {
-            $this->db->where('id_karyawan', $id_karyawan);
-            $delete = $this->db->delete('karyawan');
-        } elseif ($id_sdm != '') {
-            $this->db->where('id_sdm', $id_sdm);
-            $delete = $this->db->delete('sdm');
+        $param = $this->get('param');
+
+        if ($param == 'delete_pegawai') {
+          $this->db->where('idpegawai', $id_pegawai);
+          $delete = $this->db->delete('pegawai');
+        } elseif ($param == 'delete_absen') {
+          $this->db->where('id_absen', $id_absen);
+          $delete = $this->db->delete('absensi');
+        } elseif ($param == 'delete_status_pemasangan') {
+          $this->db->where('id_status', $id_status);
+          $delete = $this->db->delete('status_karyawan');
+        } elseif ($param == 'delete_karyawan') {
+          $this->db->where('id_karyawan', $id_karyawan);
+          $delete = $this->db->delete('karyawan');
+        } elseif ($param == 'delete_sdm') {
+          $this->db->where('id_sdm', $id_sdm);
+          $delete = $this->db->delete('sdm');
         }
+
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

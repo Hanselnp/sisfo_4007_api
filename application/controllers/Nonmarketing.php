@@ -146,17 +146,16 @@ class Nonmarketing extends REST_Controller {
     //Menghapus salah satu data telkomdb
     function index_delete() {
 
-        $id_pemesanan = $this->delete('id_pemesanan');
-        $id_komplain_nonmarket = $this->delete('id_komplain_nonmarket');
+      $param = $this->get('param');
 
+      if ($param == 'delete_pemesanan') {
+        $this->db->where('id_pemesanan', $id_pemesanan);
+        $delete = $this->db->delete('pemesanan');
+      } elseif ($param == 'delete_komplain_nonmarket') {
+        $this->db->where('id_komplain_nonmarket', $id_komplain_nonmarket);
+        $delete = $this->db->delete('komplain_nonmarket');
+      }
 
-        if ($id_pemesanan != '') {
-            $this->db->where('id_pemesanan', $id_pemesanan);
-            $delete = $this->db->delete('pemesanan');
-        } elseif ($id_komplain_nonmarket != '') {
-            $this->db->where('id_komplain_nonmarket', $id_komplain_nonmarket);
-            $delete = $this->db->delete('komplain_nonmarket');
-        }
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

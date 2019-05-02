@@ -148,17 +148,15 @@ class Finance extends REST_Controller {
     //Menghapus salah satu data telkomdb
     function index_delete() {
 
-        $id_pemasukan = $this->delete('id_pemasukan');
-        $id_pegawai = $this->delete('idpegawai');
+      $param = $this->get('param');
 
-
-        if ($id_pemasukan != '') {
-            $this->db->where('id_pemasukan', $id_pemasukan);
-            $delete = $this->db->delete('finance');
-        } elseif ($id_pegawai != '') {
-            $this->db->where('idpegawai', $id_pegawai);
-            $delete = $this->db->delete('pegawai');
-        }
+      if ($param == 'delete_finance') {
+        $this->db->where('id_pemasukan', $id_pemasukan);
+        $delete = $this->db->delete('finance');
+      } elseif ($param == 'delete_pegawai') {
+        $this->db->where('idpegawai', $id_pegawai);
+        $delete = $this->db->delete('pegawai');
+      }
 
         if ($delete) {
             $this->response(array('status' => 'success'), 201);

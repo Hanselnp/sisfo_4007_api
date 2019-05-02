@@ -215,20 +215,19 @@ class Itsupport extends REST_Controller {
     //Menghapus salah satu data telkomdb
     function index_delete() {
 
-        $id_komplain = $this->delete('id_komplain');
-        $id_sp = $this->delete('id_sp');
-        $id_pelanggan = $this->delete('id_pelanggan');
+      $param = $this->get('param');
 
-      if ($id_komplain != '') {
-            $this->db->where('id_komplain', $id_komplain);
-            $delete = $this->db->delete('komplain');
-        } elseif ($id_sp != '') {
-            $this->db->where('id_sp', $id_sp);
-            $delete = $this->db->delete('status_pemasangan');
-        } elseif ($id_pelanggan != '') {
-            $this->db->where('id_pelanggan', $id_pelanggan);
-            $delete = $this->db->delete('pelanggan');
-        }
+      if ($param == 'delete_komplain') {
+        $this->db->where('id_komplain', $id_komplain);
+        $delete = $this->db->delete('komplain');
+      } elseif ($param == 'delete_status_pemasangan') {
+        $this->db->where('id_sp', $id_sp);
+        $delete = $this->db->delete('status_pemasangan');
+      } elseif ($param == 'delete_pelanggan') {
+        $this->db->where('id_pelanggan', $id_pelanggan);
+        $delete = $this->db->delete('pelanggan');
+      }
+
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

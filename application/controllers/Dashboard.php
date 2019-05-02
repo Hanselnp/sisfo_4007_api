@@ -270,34 +270,32 @@ class Dashboard extends REST_Controller {
 
     //Menghapus salah satu data telkomdb
     function index_delete() {
-        $id_pemesanan = $this->delete('id_pemesanan');
-        $id_sp = $this->delete('id_sp');
-        $idTagihan = $this->delete('idTagihan');
-        $idBarang = $this->delete('idBarang');
-        $id_sdm = $this->delete('id_sdm');
 
+        $param = $this->get('param');
 
-        if ($id_pemesanan != '') {
-            $this->db->where('id_pemesanan', $id_pemesanan);
-            $delete = $this->db->delete('pemesanan');
-        } elseif ($id_sp != '') {
-            $this->db->where('id_sp', $id_sp);
-            $delete = $this->db->delete('status_pemasangan');
-        } elseif ($idTagihan != '') {
-            $this->db->where('idTagihan', $idTagihan);
-            $delete = $this->db->delete('tagihan');
-        } elseif ($idBarang != '') {
-            $this->db->where('idBarang', $idBarang);
-            $delete = $this->db->delete('inventory');
-        } elseif ($id_sdm != '') {
-            $this->db->where('id_sdm', $id_sdm);
-            $delete = $this->db->delete('sdm');
+        if ($param == 'delete_pemesanan'){
+          $this->db->where('id_pemesanan', $id_pemesanan);
+          $delete = $this->db->delete('pemesanan');
+        } elseif ($param == 'delete_status_pemasangan') {
+          $this->db->where('id_sp', $id_sp);
+          $delete = $this->db->delete('status_pemasangan');
+        } elseif ($param == 'delete_tagihan') {
+          $this->db->where('idTagihan', $idTagihan);
+          $delete = $this->db->delete('tagihan');
+        } elseif ($param == 'delete_inventory') {
+          $this->db->where('idBarang', $idBarang);
+          $delete = $this->db->delete('inventory');
+        } elseif ($param == 'delete_sdm') {
+          $this->db->where('id_sdm', $id_sdm);
+          $delete = $this->db->delete('sdm');
         }
+
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {
             $this->response(array('status' => 'fail', 502));
         }
+
     }
 }
 ?>

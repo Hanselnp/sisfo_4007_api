@@ -173,22 +173,20 @@ class Wholesale extends REST_Controller {
     //Menghapus salah satu data telkomdb
     function index_delete() {
 
-        $idKategori = $this->delete('idKategori');
-        $idSupplier = $this->delete('idSupplier');
-        $idBarang = $this->delete('idBarang');
+        $param = $this->get('param');
 
-
-
-        if ($idKategori != '') {
-            $this->db->where('idKategori', $idKategori);
-            $delete = $this->db->delete('kategori');
-        } elseif ($idSupplier != '') {
-            $this->db->where('idSupplier', $idSupplier);
-            $delete = $this->db->delete('supplier');
-        } elseif ($idBarang != '') {
-            $this->db->where('idBarang', $idBarang);
-            $delete = $this->db->delete('inventory');
+        if ($param == 'delete_kategori') {
+          $this->db->where('idKategori', $idKategori);
+          $delete = $this->db->delete('kategori');
+        } elseif ($param == 'delete_supplier') {
+          $this->db->where('idSupplier', $idSupplier);
+          $delete = $this->db->delete('supplier');
+        } elseif ($param == 'delete_inventoriy') {
+          $this->db->where('idBarang', $idBarang);
+          $delete = $this->db->delete('inventory');
         }
+
+
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

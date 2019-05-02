@@ -118,20 +118,18 @@ class Home extends REST_Controller {
     //Menghapus salah satu data telkomdb
     function index_delete() {
 
-        $id_about = $this->delete('id_about');
-        $id_article = $this->delete('id_article');
-        $id_banner = $this->delete('id_banner');
+      $param = $this->get('param');
 
-        if ($id_about != '') {
-            $this->db->where('id_about', $id_about);
-            $delete = $this->db->delete('about');
-        } elseif ($id_article != '') {
-            $this->db->where('id_article', $id_article);
-            $delete = $this->db->delete('article');
-        } elseif ($id_banner != '') {
-            $this->db->where('id_banner', $id_banner);
-            $delete = $this->db->delete('banner');
-        }
+      if ($param == 'delete_about') {
+        $this->db->where('id_about', $id_about);
+        $delete = $this->db->delete('about');
+      } elseif ($param == 'delete_article') {
+        $this->db->where('id_article', $id_article);
+        $delete = $this->db->delete('article');
+      } elseif ($param == 'delete_banner') {
+        $this->db->where('id_banner', $id_banner);
+        $delete = $this->db->delete('banner');
+      }
 
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
