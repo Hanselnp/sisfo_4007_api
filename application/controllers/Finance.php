@@ -5,37 +5,69 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Finance extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    function getFinance($id_pemasukan = '', $limit = '') {
+      if ($id_pemasukan == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_pemasukan', 'DESC');
+          return $this->response($this->db->get('finance')->result(), 200);
+        } else {
+          return $this->response($this->db->get('finance')->result(), 200);
+        }
+      } else if ($id_pemasukan != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_pemasukan', $id_pemasukan);
+          $this->db->order_by('id_pemasukan', 'DESC');
+          return $this->response($this->db->get('finance')->result(), 200);
+        } else {
+          $this->db->where('id_pemasukan', $id_pemasukan);
+          return $this->response($this->db->get('finance')->result(), 200);
+        }
+      }
+    }
+
+    function getPegawai($id_pegawai = '', $limit = '') {
+      if ($id_pegawai == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_komplain_nonmarket', 'DESC');
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        } else {
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        }
+      } else if ($id_pegawai != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_komplain_nonmarket', $id_pegawai);
+          $this->db->order_by('id_komplain_nonmarket', 'DESC');
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        } else {
+          $this->db->where('id_komplain_nonmarket', $id_pegawai);
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        }
+      }
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
-
-        $id_pemasukan = $this->get('id_pemasukan');
-        $id_pegawai = $this->get('idpegawai');
-
-        //add all function
-        if ($id_pemasukan != '') {
-            if ($id_pemasukan == 'all') {
-              $telkomdb = $this->db->get('finance')->result();
-            } else {
-              $this->db->where('id_pemasukan', $id_pemasukan);
-              $telkomdb = $this->db->get('finance')->result();
-            }
-        } elseif ($id_pegawai != '') {
-            if ($id_pegawai == 'all') {
-              $telkomdb = $this->db->get('pegawai')->result();
-              $telkomdb = $this->db->get('gaji')->result();
-            } else {
-              $this->db->where('idpegawai', $id_pegawai);
-              $telkomdb = $this->db->get('pegawai')->result();
-              $telkomdb = $this->db->get('gaji')->result();
-            }
-        $this->response($telkomdb, 200);
+        $param = $this->get('param');
+        if ($param == 'get_pemasukan') {
+          $id_pemasukan = $this->get('id_pemasukan');
+          $limit = $this->get('limit');
+          return $this->getFinance($id_pemasukan, $limit);
+        } else if ($param == 'get_pegawai') {
+          $id_pagawai = $this->get('idPegawai');
+          $limit = $this->get('limit');
+          return $this->getPegawai($id_pagawai, $limit);
+         }
     }
 
     //Mengirim atau menambah data telkomdb baru
@@ -126,7 +158,7 @@ class Telkomdb extends REST_Controller {
             $this->db->where('idpegawai', $id_pegawai);
             $delete = $this->db->delete('pegawai');
         }
-        
+
         if ($delete) {
             $this->response(array('status' => 'success'), 201);
         } else {

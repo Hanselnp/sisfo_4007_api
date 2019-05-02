@@ -5,16 +5,137 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Hr extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    function getPegawai($id_pegawai = '', $limit = '') {
+      if ($id_pegawai == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_komplain_nonmarket', 'DESC');
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        } else {
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        }
+      } else if ($id_pegawai != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_komplain_nonmarket', $id_pegawai);
+          $this->db->order_by('id_komplain_nonmarket', 'DESC');
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        } else {
+          $this->db->where('id_komplain_nonmarket', $id_pegawai);
+          return $this->response($this->db->get('pegawai')->result(), 200);
+        }
+      }
+    }
+
+    function getAbsen($id_absen = '', $limit = '') {
+      if ($id_absen == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_absen', 'DESC');
+          return $this->response($this->db->get('absensi')->result(), 200);
+        } else {
+          return $this->response($this->db->get('absensi')->result(), 200);
+        }
+      } else if ($id_absen != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_absen', $id_absen);
+          $this->db->order_by('id_absen', 'DESC');
+          return $this->response($this->db->get('absensi')->result(), 200);
+        } else {
+          $this->db->where('id_absen', $id_absen);
+          return $this->response($this->db->get('absensi')->result(), 200);
+        }
+      }
+    }
+
+    function getStatusPemasangan($id_sp = '', $limit = '') {
+      if ($id_sp == '') {
+        if ($limit != '') {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          $this->db->limit($limit);
+          $this->db->order_by('id_sp', 'DESC');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        } else {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        }
+      } else if ($id_sp != '') {
+        if ($limit != '') {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          $this->db->limit($limit);
+          $this->db->where('id_sp', $id_barang);
+          $this->db->order_by('id_sp', 'DESC');
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        } else {
+          $this->db->join('pelanggan', 'status_pemasangan.id_pelanggan = pelanggan.id_pelanggan');
+          $this->db->where('id_sp', $id_barang);
+          return $this->response($this->db->get('status_pemasangan')->result(), 200);
+        }
+      }
+    }
+
+    function getKaryawan($id_karyawan = '', $limit = '') {
+      if ($id_karyawan == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_karyawan', 'DESC');
+          return $this->response($this->db->get('karyawan')->result(), 200);
+        } else {
+          return $this->response($this->db->get('karyawan')->result(), 200);
+        }
+      } else if ($id_karyawan != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_karyawan', $id_karyawan);
+          $this->db->order_by('id_karyawan', 'DESC');
+          return $this->response($this->db->get('karyawan')->result(), 200);
+        } else {
+          $this->db->where('id_karyawan', $id_karyawan);
+          return $this->response($this->db->get('karyawan')->result(), 200);
+        }
+      }
+    }
+
+    function getSdm() {
+      $id_sdm = $this->get('id_sdm');
+      if ($id_sdm == '') {
+        return $this->response($this->db->get('sdm')->result(), 200);
+      } else {
+        $this->db->where('id_sdm', $id_sdm);
+        return $this->response($this->db->get('sdm')->result(), 200);
+      }
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
-
+        $param = $this->get('param');
+        if ($param == 'get_pegawai') {
+          $id_pagawai = $this->get('idPegawai');
+          $limit = $this->get('limit');
+          return $this->getPegawai($id_pagawai, $limit);
+        } else if ($param == 'get_absen') {
+          $id_absen = $this->get('id_absen');
+          $limit = $this->get('limit');
+          return $this->getAbsen($id_absen, $limit);
+        } else if ($param == 'get_status') {
+          $id_sp = $this->get('id_sp');
+          $limit = $this->get('limit');
+          return $this->getStatusPemasangan($id_sp, $limit);
+        } else if ($param == 'get_karyawan') {
+          $id_karyawan = $this->get('id_karyawan');
+          $limit = $this->get('limit');
+          return $this->getKaryawan($id_karyawan, $limit);
+        } else if ($param == 'get_sdm') {
+          return $this->getSdm();
+        }
         $id_pegawai = $this->get('idpegawai');
         $id_absen = $this->get('id_absen');
         $id_status = $this->get('id_status');
@@ -22,45 +143,7 @@ class Telkomdb extends REST_Controller {
         $id_sdm = $this->get('id_sdm');
 
         //add all function
-        if ($id_pegawai != '') {
-            if ($id_pegawai == 'all') {
-              $telkomdb = $this->db->get('pegawai')->result();
-              $telkomdb = $this->db->get('gaji')->result();
-            } else {
-              $this->db->where('idpegawai', $id_pegawai);
-              $telkomdb = $this->db->get('pegawai')->result();
-              $telkomdb = $this->db->get('gaji')->result();
-            }
-        } elseif ($id_absen != '') {
-            if ($id_absen == 'all') {
-              $telkomdb = $this->db->get('absensi')->result();
-            } else {
-              $this->db->where('id_absen', $id_absen);
-              $telkomdb = $this->db->get('absensi')->result();
-            }
-        } elseif ($id_status != '') {
-            if ($id_status == 'all') {
-              $telkomdb = $this->db->get('status_karyawan')->result();
-            } else {
-              $this->db->where('id_status', $id_status);
-              $telkomdb = $this->db->get('status_karyawan')->result();
-            }
-        } elseif ($id_karyawan != '') {
-            if ($id_karyawan == 'all') {
-              $telkomdb = $this->db->get('karyawan')->result();
-            } else {
-              $this->db->where('id_karyawan', $id_karyawan);
-              $telkomdb = $this->db->get('karyawan')->result();
-            }
-        } elseif ($id_sdm != '') {
-            if ($id_sdm == 'all') {
-              $telkomdb = $this->db->get('sdm')->result();
-            } else {
-              $this->db->where('id_sdm', $id_sdm);
-              $telkomdb = $this->db->get('sdm')->result();
-            }
-        }
-        $this->response($telkomdb, 200);
+
     }
 
     //Mengirim atau menambah data telkomdb baru

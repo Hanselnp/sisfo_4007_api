@@ -5,42 +5,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Home extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    public function getBanner() {
+      return $this->response($this->db->get('banner')->result(), 200);
+    }
+
+    public function getAbout()
+    {
+      return $this->response($this->db->get('about')->result(), 200);
+    }
+
+    public function getArticle()
+    {
+      return $this->response($this->db->get('article')->result(), 200);
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
-        $id_about = $this->get('id_about');
-        $id_article = $this->get('id_article');
-        $id_banner = $this->get('id_banner');
-
-        if ($id_about != '') {
-            if ($id_about == 'all') {
-              $telkomdb = $this->db->get('about')->result();
-            } else {
-              $this->db->where('id_about', $id_about);
-              $telkomdb = $this->db->get('about')->result();
-            }
-        } elseif ($id_article != '') {
-            if ($id_article == 'all') {
-              $telkomdb = $this->db->get('article')->result();
-            } else {
-              $this->db->where('id_article', $id_article);
-              $telkomdb = $this->db->get('article')->result();
-            }
-        } elseif ($id_banner != '') {
-            if ($id_banner == 'all') {
-              $telkomdb = $this->db->get('banner')->result();
-            } else {
-              $this->db->where('id_banner', $id_banner);
-              $telkomdb = $this->db->get('banner')->result();
-            }
+        $param = $this->get('param');
+        if ($param == "get_banner") {
+          return $this->getBanner();
+        } else if ($param == 'get_article') {
+          return $this->getArticle();
+        } else if ($param == 'get_about') {
+          return $this->getAbout();
         }
-        $this->response($telkomdb, 200);
+
     }
 
     //Mengirim atau menambah data telkomdb baru

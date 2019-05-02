@@ -5,44 +5,84 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
-class Telkomdb extends REST_Controller {
+class Wholesale extends REST_Controller {
 
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
     }
 
+    function getKategori() {
+      $id_kategori = $this->get('id_kategori');
+      if ($id_kategori == '') {
+        return $this->response($this->db->get('kategori')->result(), 200);
+      } else {
+        $this->db->where('id_k  ategori', $id_kategori);
+        return $this->response($this->db->get('kategori')->result(), 200);
+      }
+    }
+
+    function getSupplier($id_supplier = '', $limit = '') {
+      if ($id_supplier == '') {
+        if ($limit !=  '') {
+          $this->db->limit($limit);
+          $this->db->order_by('idSupplier', 'DESC');
+          return $this->response($this->db->get('supplier')->result(), 200);
+        } else {
+          return $this->response($this->db->get('supplier')->result(), 200);
+        }
+      } else if ($id_supplier != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('idSupplier', $id_supplier);
+          $this->db->order_by('idSupplier', 'DESC');
+          return $this->response($this->db->get('supplier')->result(), 200);
+        } else {
+          $this->db->where('idSupplier', $id_supplier);
+          return $this->response($this->db->get('supplier')->result(), 200);
+        }
+      }
+    }
+
+    function getInventory($id_barang = '', $limit = '') {
+      if ($id_barang == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('idBarang', 'DESC');
+          return $this->response($this->db->get('inventory')->result(), 200);
+        } else {
+          return $this->response($this->db->get('inventory')->result(), 200);
+        }
+      } else if ($id_barang != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('idBarang', $id_barang);
+          $this->db->order_by('idBarang', 'DESC');
+          return $this->response($this->db->get('inventory')->result(), 200);
+        } else {
+          $this->db->where('idBarang', $id_barang);
+          return $this->response($this->db->get('inventory')->result(), 200);
+        }
+      }
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
 
-        $idKategori = $this->get('idKategori');
-        $idSupplier = $this->get('idSupplier');
-        $idBarang = $this->get('idBarang');
-
-
-        //add all function
-      eif ($idKategori != '') {
-            if ($idKategori == 'all') {
-              $telkomdb = $this->db->get('kategori')->result();
-            } else {
-              $this->db->where('idKategori', $id_Kategori);
-              $telkomdb = $this->db->get('kategori')->result();
-            }
-        } elseif ($idSupplier != '') {
-            if ($idSupplier == 'all') {
-              $telkomdb = $this->db->get('supplier')->result();
-            } else {
-              $this->db->where('idSupplier', $idSupplier);
-              $telkomdb = $this->db->get('supplier')->result();
-            }
-        } elseif ($idBarang != '') {
-            if ($idBarang == 'all') {
-              $telkomdb = $this->db->get('inventory')->result();
-            } else {
-              $this->db->where('idBarang', $idBarang);
-              $telkomdb = $this->db->get('inventory')->result();
-            }
-        $this->response($telkomdb, 200);
+      $param = $this->get('param');
+      if ($param == 'get_kategori') {
+        $id_Kategori = $this->get('idKategori');
+        $limit = $this->get('limit');
+        return $this->getKategori($id_Kategori, $limit);
+      } else if ($param == 'get_supplier') {
+        $id_supplier = $this->get('idSupplier');
+        $limit = $this->get('limit');
+        return $this->getSupplier($id_supplier, $limit);
+      } else if ($param == 'get_inventory') {
+        $id_barang = $this->get('id_inventory');
+        $limit = $this->get('limit');
+        return $this->getInventory($id_barang, $limit);
+      }
     }
 
     //Mengirim atau menambah data telkomdb baru

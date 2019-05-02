@@ -12,29 +12,63 @@ class Nonmarketing extends REST_Controller {
         $this->load->database();
     }
 
+    function getPemesanan($id_pemesanan = '', $limit = '') {
+      if ($id_pemesanan == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_pemesanan', 'DESC');
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        } else {
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        }
+      } else if ($id_pemesanan != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_pemesanan', $id_pemesanan);
+          $this->db->order_by('id_pemesanan', 'DESC');
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        } else {
+          $this->db->where('id_pemesanan', $id_pemesanan);
+          return $this->response($this->db->get('pemesanan')->result(), 200);
+        }
+      }
+    }
+
+    function getKomplainNonmarket($id_komplainNonmarket = '', $limit = '') {
+      if ($id_komplainNonmarket == '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->order_by('id_komplain_nonmarket', 'DESC');
+          return $this->response($this->db->get('inventory')->result(), 200);
+        } else {
+          return $this->response($this->db->get('inventory')->result(), 200);
+        }
+      } else if ($id_komplainNonmarket != '') {
+        if ($limit != '') {
+          $this->db->limit($limit);
+          $this->db->where('id_komplain_nonmarket', $id_komplainNonmarket);
+          $this->db->order_by('id_komplain_nonmarket', 'DESC');
+          return $this->response($this->db->get('inventory')->result(), 200);
+        } else {
+          $this->db->where('id_komplain_nonmarket', $id_komplainNonmarket);
+          return $this->response($this->db->get('inventory')->result(), 200);
+        }
+      }
+    }
+
     //Menampilkan data telkomdb
     function index_get() {
+      $param = $this->get('param');
+      if ($param == 'get_pemesanan') {
         $id_pemesanan = $this->get('id_pemesanan');
-        $id_komplain_nonmarket = $this->get('id_komplain_nonmarket');
-
-
-        //add all function
-        if ($id_pemesanan != '') {
-            if ($id_pemesanan = 'all') {
-              $telkomdb = $this->db->get('pemesanan')->result();
-            } else {
-              $this->db->where('id_pemesanan', $id_pemesanan);
-              $telkomdb = $this->db->get('pemesanan')->result();
-            }
-        } elseif ($id_komplain_nonmarket != '') {
-            if ($id_komplain_nonmarket == 'all') {
-              $telkomdb = $this->db->get('komplain_nonmarket')->result();
-            } else {
-              $this->db->where('id_komplain_market', $id_komplain_nonmarket);
-              $telkomdb = $this->db->get('komplain_nonmarket')->result();
-            }
-        $this->response($telkomdb, 200);
-    }
+        $limit = $this->get('limit');
+        return $this->getPemesanan($id_pemesanan, $limit);
+       } else if ($param == 'get_komplain_nonmarket') {
+        $id_komplainNonmarket = $this->get('id_komplain_nonmarket');
+        $limit = $this->get('limit');
+        return $this->getKomplainNonmarket($id_komplainNonmarket, $limit);
+       }
+      }
 
     //Mengirim atau menambah data telkomdb baru
     function index_post() {

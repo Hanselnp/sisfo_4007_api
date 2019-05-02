@@ -36,33 +36,7 @@ class Csmarketing extends REST_Controller {
       } else if ($param == 'get_about') {
         return $this->getAbout();
       }
-        $id_about = $this->get('id_about');
-        $id_article = $this->get('id_article');
-        $id_banner = $this->get('id_banner');
 
-        if ($id_about != '') {
-            if ($id_about == 'all') {
-              $telkomdb = $this->db->get('about')->result();
-            } else {
-              $this->db->where('id_about', $id_about);
-              $telkomdb = $this->db->get('about')->result();
-            }
-        } elseif ($id_article != '') {
-            if ($id_article == 'all') {
-              $telkomdb = $this->db->get('article')->result();
-            } else {
-              $this->db->where('id_article', $id_article);
-              $telkomdb = $this->db->get('article')->result();
-            }
-        } elseif ($id_banner != '') {
-            if ($id_banner == 'all') {
-              $telkomdb = $this->db->get('banner')->result();
-            } else {
-              $this->db->where('id_banner', $id_banner);
-              $telkomdb = $this->db->get('banner')->result();
-            }
-        }
-        $this->response($telkomdb, 200);
     }
 
     //Mengirim atau menambah data telkomdb baru
